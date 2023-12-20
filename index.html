@@ -49,7 +49,7 @@
         </div>
     </body>
     <script>
-        const endpoint = 'https://corsproxy.io/?' + encodeURIComponent("https://docs.google.com/spreadsheets/d/12YdGWLy6b9TOXSsgKohkL4KHbphSybJjCD6HVgdALrw/gviz/tq?gid=1015077658");
+        const endpoint = 'https://corsproxy.io/?' + encodeURIComponent("https://docs.google.com/spreadsheets/d/12YdGWLy6b9TOXSsgKohkL4KHbphSybJjCD6HVgdALrw/gviz/tq?gid=1015077658&" + (new Date().getTime()));
         fetch(endpoint).then((result)=> {
             result.text().then((res) => {
                 let raw = res;
