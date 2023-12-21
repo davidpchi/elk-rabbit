@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Text, Image } from "@chakra-ui/react";
 import { LeaderboardEntry } from "../../types/LeaderboardEntry";
 
 export const StreamIntro = React.memo(function StreamIntro({
@@ -57,104 +57,86 @@ export const StreamIntro = React.memo(function StreamIntro({
                 setCountdown(`STREAM STARTING SOON`);
             } else {
                 // Display the result in the element with id="demo"
-                setCountdown(`LIVE IN: ${minutes}: ${seconds}`);
+                setCountdown(`LIVE IN ${minutes}:${seconds}`);
             }
         }, 1000);
     }, []);
 
     return (
-        <div
+        <Flex
             style={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0,
+                flex: 1,
                 backgroundColor: "magenta",
                 display: "flex",
+                flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
+                padding: "32px",
+                height: "100vh",
             }}
         >
-            <div
+            <Text
                 style={{
-                    flex: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "100%",
-                    height: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "32px",
+                    fontSize: 64,
+                    fontFamily: "Ink Free",
+                    fontWeight: "bold",
+                    textShadow: "black 1px 0 10px",
+                    color: "white",
+                    alignSelf: "flex-end",
                 }}
             >
-                <div style={{ flex: 0, alignSelf: "flex-end", marginBottom: "-64px" }}>
+                {countdown}
+            </Text>
+            <Image src="https://media.discordapp.net/attachments/787466774412787753/1180377698107932732/2022_advent_calendar_logo_copy.png" />
+            <Flex direction={"row"}>
+                <Flex
+                    style={{
+                        flex: 1,
+                        marginBottom: "-64px",
+                        flexDirection: "column",
+                        maxWidth: "300px",
+                        textAlign: "left",
+                    }}
+                >
                     <Text
+                        fontSize={32}
+                        fontFamily="Ink Free"
+                        fontWeight={"bold"}
+                        textShadow="black 1px 0 10px"
+                        color="white"
+                    >
+                        Leaderboard
+                    </Text>
+                    {leaderboardContent}
+                </Flex>
+                <Flex
+                    flexDirection="column"
+                    marginBottom="-64px"
+                    justifyContent="center"
+                    alignItems="center"
+                    minWidth="900px"
+                >
+                    <img style={{ flex: 0, width: "500px" }} src={imageUri} />
+                    <div
                         style={{
+                            flex: 1,
+                            marginBottom: "-64px",
+                            flexDirection: "row",
                             fontSize: 64,
                             fontFamily: "Ink Free",
                             fontWeight: "bold",
                             textShadow: "black 1px 0 10px",
                             color: "white",
+                            textAlign: "center",
                         }}
                     >
-                        {countdown}
-                    </Text>
-                </div>
-                <div style={{ flex: 0 }}>
-                    <img src="https://media.discordapp.net/attachments/787466774412787753/1180377698107932732/2022_advent_calendar_logo_copy.png" />
-                </div>
-                <Flex direction={"row"}>
-                    <div
-                        style={{
-                            flex: 1,
-                            marginBottom: "-64px",
-                            flexDirection: "column",
-                            maxWidth: "300px",
-                            textAlign: "left",
-                        }}
-                    >
-                        <Text
-                            fontSize={32}
-                            fontFamily="Ink Free"
-                            fontWeight={"bold"}
-                            textShadow="black 1px 0 10px"
-                            marginBottom={-20}
-                            color="white"
-                        >
-                            Leaderboard
-                        </Text>
-                        {leaderboardContent}
+                        {new Date().toLocaleDateString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                        })}
                     </div>
-                    <Flex
-                        flexDirection="column"
-                        marginBottom="-64px"
-                        justifyContent="center"
-                        alignItems="center"
-                        minWidth="900px"
-                    >
-                        <img style={{ flex: 0, width: "500px" }} src={imageUri} />
-                        <div
-                            style={{
-                                flex: 1,
-                                marginBottom: "-64px",
-                                flexDirection: "row",
-                                fontSize: 64,
-                                fontFamily: "Ink Free",
-                                fontWeight: "bold",
-                                textShadow: "black 1px 0 10px",
-                                color: "white",
-                                textAlign: "center",
-                            }}
-                        >
-                            {new Date().toLocaleDateString("en-US", {
-                                month: "long",
-                                day: "numeric",
-                            })}
-                        </div>
-                    </Flex>
                 </Flex>
-            </div>
-        </div>
+            </Flex>
+        </Flex>
     );
 });
