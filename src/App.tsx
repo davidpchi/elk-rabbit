@@ -52,11 +52,13 @@ function App() {
 
     if (path === "obs_intro") {
         return (
-            <StreamIntro
-                leaderboard={leaderboard}
-                leaderboardMaxNum={5}
-                cardSetImages={cardSetImages}
-            />
+            <Flex position={"absolute"} top={0} left={0} right={0} bottom={0}>
+                <StreamIntro
+                    leaderboard={leaderboard}
+                    leaderboardMaxNum={5}
+                    cardSetImages={cardSetImages}
+                />
+            </Flex>
         );
     }
 
