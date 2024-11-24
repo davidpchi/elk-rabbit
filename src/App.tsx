@@ -55,7 +55,6 @@ function App() {
                     leaderboard={leaderboard ?? []}
                     leaderboardMaxNum={5}
                     schedule={schedule ?? []}
-                    history={history ?? []}
                 />
             </Flex>
         );

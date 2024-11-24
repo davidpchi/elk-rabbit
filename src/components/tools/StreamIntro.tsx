@@ -3,7 +3,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Flex, Text, Image } from "@chakra-ui/react";
 import { LeaderboardEntry } from "../../types/LeaderboardEntry";
 import { MagicSet } from "../../types/MagicSet";
-import { HistoryEntry } from "../../types/HistoryEntry";
 import { UpNext } from "../home/UpNext";
 import logo from "../../assets/logo.png";
 
@@ -11,12 +10,10 @@ export const StreamIntro = React.memo(function StreamIntro({
     leaderboard,
     leaderboardMaxNum,
     schedule,
-    history,
 }: {
     leaderboard: LeaderboardEntry[];
     leaderboardMaxNum: number;
     schedule: MagicSet[];
-    history: HistoryEntry[];
 }) {
     const [countdown, setCountdown] = useState<string>();
 
