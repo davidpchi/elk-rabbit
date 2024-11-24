@@ -10,9 +10,7 @@ import { MagicSet } from "./types/MagicSet";
 import { HistoryEntry } from "./types/HistoryEntry";
 import { Leaderboard } from "./components/home/Leaderboard";
 import { PreviousResult } from "./components/home/PreviousResult";
-
-const calendarLogo =
-    "https://media.discordapp.net/attachments/787466774412787753/1180377698107932732/2022_advent_calendar_logo_copy.png";
+import logo from "./assets/logo.png";
 
 const googleFormLink =
     "https://docs.google.com/forms/d/e/1FAIpQLSfrE6W0BaAw0wWKa39Y-CgMZEru7XiAm7sE89PMcPrvvn5yyA/viewform";
@@ -20,7 +18,7 @@ const googleFormLink =
 function App() {
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>();
     const [history, setHistory] = useState<HistoryEntry[]>();
-    const [cardSetImages, setCardSetImages] = useState<string[]>();
+    const [cardSetImages, setCardSetImages] = useState<MagicSet[]>();
 
     useEffect(() => {
         const getLeaderboardCallback = (leaderboard: LeaderboardEntry[]) => {
@@ -31,8 +29,8 @@ function App() {
     }, [setLeaderboard]);
 
     useEffect(() => {
-        const getCardSetImagesCallback = (images: MagicSet[]) => {
-            setCardSetImages(images.map((value) => value.imageUri));
+        const getCardSetImagesCallback = (sets: MagicSet[]) => {
+            setCardSetImages(sets);
         };
 
         DataService.getSetData(getCardSetImagesCallback);
@@ -57,19 +55,21 @@ function App() {
     if (path === "obs_intro") {
         return (
             <Flex position={"absolute"} top={0} left={0} right={0} bottom={0}>
-                <StreamIntro
-                    leaderboard={leaderboard}
-                    leaderboardMaxNum={5}
-                    cardSetImages={cardSetImages}
-                />
+                <StreamIntro leaderboard={leaderboard} leaderboardMaxNum={5} cardSetImages={[]} />
             </Flex>
         );
     }
 
-    const dayInDecember = 11; //new Date().getDate();
-    const imageUri = cardSetImages[dayInDecember - 1];
+    let dayInDecember = new Date().getDate();
+
+    // if we are past the 24th day, we can just show the first item.
+    if (dayInDecember > 24) {
+        dayInDecember = 0;
+    }
+
+    const imageUri = cardSetImages[dayInDecember].imageUri;
     const result =
-        history !== undefined && dayInDecember >= 3 ? history[dayInDecember - 2] : undefined;
+        history !== undefined && dayInDecember >= 3 ? history[dayInDecember - 1] : undefined;
 
     const navigateToForm = () => {
         window.location.href = googleFormLink;
@@ -80,7 +80,7 @@ function App() {
             <Snowfall />
             <Flex direction={"column"} alignItems={"center"}>
                 <Flex maxWidth={1000}>
-                    <Image maxWidth={"100%"} src={calendarLogo} />
+                    <Image maxWidth={"100%"} src={logo} />
                 </Flex>
                 <Heading>COMING UP NEXT: </Heading>
                 <Flex

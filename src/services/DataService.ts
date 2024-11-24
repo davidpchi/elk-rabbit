@@ -20,12 +20,10 @@ const getLeaderboard = async (callback: (result: LeaderboardEntry[]) => void) =>
         raw = raw.substring(0, raw.length - 2);
         const obj = JSON.parse(raw);
 
-        console.log(obj);
-
         const players = [];
 
         // create the collection of players
-        for (let i = 1; i < obj.table.rows; i++) {
+        for (let i = 0; i < obj.table.rows; i++) {
             const row = obj.table.rows;
             players.push({
                 name: row.c[0].v,
@@ -55,13 +53,10 @@ const getSetData = async (callback: (result: MagicSet[]) => void) => {
         raw = raw.substring(0, raw.length - 2);
         const obj = JSON.parse(raw);
 
-        console.log(obj);
-
         const sets: MagicSet[] = [];
 
         // create the collection of players
-        // skip the first row
-        for (let i = 1; i < obj.table.rows.length; i++) {
+        for (let i = 0; i < obj.table.rows.length; i++) {
             const row = obj.table.rows[i];
             sets.push({
                 name: row.c[0].v,
@@ -85,8 +80,7 @@ const getHistory = async (callback: (result: HistoryEntry[]) => void) => {
         const history: HistoryEntry[] = [];
 
         // create the collection of players
-        // skip the first row
-        for (let i = 1; i < obj.table.rows.length; i++) {
+        for (let i = 0; i < obj.table.rows.length; i++) {
             const row = obj.table.rows[i];
 
             const result: HistoryEntry = {
