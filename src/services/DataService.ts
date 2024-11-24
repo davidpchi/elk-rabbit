@@ -23,13 +23,15 @@ const getLeaderboard = async (callback: (result: LeaderboardEntry[]) => void) =>
         const players = [];
 
         // create the collection of players
-        for (let i = 0; i < obj.table.rows; i++) {
-            const row = obj.table.rows;
+        for (let i = 0; i < obj.table.rows.length; i++) {
+            const row = obj.table.rows[i];
             players.push({
                 name: row.c[0].v,
                 wins: row.c[1].v,
             });
         }
+
+        console.log(players);
 
         // sort the players from most wins to least
         const sorted = players.sort((a, b) => b.wins - a.wins);

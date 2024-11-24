@@ -2,20 +2,30 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import { Flex, Text, Image } from "@chakra-ui/react";
 import { LeaderboardEntry } from "../../types/LeaderboardEntry";
+import { MagicSet } from "../../types/MagicSet";
+import { HistoryEntry } from "../../types/HistoryEntry";
+import { UpNext } from "../home/UpNext";
+import logo from "../../assets/logo.png";
 
 export const StreamIntro = React.memo(function StreamIntro({
     leaderboard,
     leaderboardMaxNum,
-    cardSetImages,
+    schedule,
+    history,
 }: {
     leaderboard: LeaderboardEntry[];
     leaderboardMaxNum: number;
-    cardSetImages: string[];
+    schedule: MagicSet[];
+    history: HistoryEntry[];
 }) {
     const [countdown, setCountdown] = useState<string>();
 
     const leaderboardContent = useMemo(() => {
-        return leaderboard
+        // if (leaderboard.length === 0) {
+        //     return null;
+        // }
+
+        const elements = leaderboard
             ? leaderboard.slice(0, leaderboardMaxNum).map((entry, index) => {
                   return (
                       <Text
@@ -29,10 +39,30 @@ export const StreamIntro = React.memo(function StreamIntro({
                   );
               })
             : null;
-    }, [leaderboard, leaderboardMaxNum]);
 
-    const dayInDecember = new Date().getDate();
-    const imageUri = cardSetImages[dayInDecember - 1];
+        return (
+            <Flex
+                style={{
+                    flex: 1,
+                    marginBottom: "-64px",
+                    flexDirection: "column",
+                    maxWidth: "300px",
+                    textAlign: "left",
+                }}
+            >
+                <Text
+                    fontSize={32}
+                    fontFamily="Ink Free"
+                    fontWeight={"bold"}
+                    textShadow="black 1px 0 10px"
+                    color="white"
+                >
+                    Leaderboard
+                </Text>
+                {elements}
+            </Flex>
+        );
+    }, [leaderboard, leaderboardMaxNum]);
 
     useEffect(() => {
         // Set the date we're counting down to
@@ -87,28 +117,9 @@ export const StreamIntro = React.memo(function StreamIntro({
             >
                 {countdown}
             </Text>
-            <Image src="https://media.discordapp.net/attachments/787466774412787753/1180377698107932732/2022_advent_calendar_logo_copy.png" />
+            <Image src={logo} />
             <Flex direction={"row"}>
-                <Flex
-                    style={{
-                        flex: 1,
-                        marginBottom: "-64px",
-                        flexDirection: "column",
-                        maxWidth: "300px",
-                        textAlign: "left",
-                    }}
-                >
-                    <Text
-                        fontSize={32}
-                        fontFamily="Ink Free"
-                        fontWeight={"bold"}
-                        textShadow="black 1px 0 10px"
-                        color="white"
-                    >
-                        Leaderboard
-                    </Text>
-                    {leaderboardContent}
-                </Flex>
+                {leaderboardContent}
                 <Flex
                     flexDirection="column"
                     marginBottom="-64px"
@@ -116,7 +127,7 @@ export const StreamIntro = React.memo(function StreamIntro({
                     alignItems="center"
                     minWidth="900px"
                 >
-                    <img style={{ flex: 0, width: "500px" }} src={imageUri} />
+                    <UpNext schedule={schedule} streamMode={true} />
                     <div
                         style={{
                             flex: 1,

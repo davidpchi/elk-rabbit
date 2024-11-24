@@ -20,6 +20,8 @@ function App() {
 
     useEffect(() => {
         const getLeaderboardCallback = (leaderboard: LeaderboardEntry[]) => {
+            console.log(leaderboard);
+
             setLeaderboard(leaderboard);
         };
 
@@ -42,10 +44,6 @@ function App() {
         DataService.getHistory(getHistoryCallback);
     }, [setHistory]);
 
-    if (leaderboard === undefined || schedule === undefined) {
-        return null;
-    }
-
     // /elk-rabbit/elk-rabbit?path=obs_intro
     const queryParameters = new URLSearchParams(window.location.search);
     const path = queryParameters.get("path");
@@ -53,7 +51,12 @@ function App() {
     if (path === "obs_intro") {
         return (
             <Flex position={"absolute"} top={0} left={0} right={0} bottom={0}>
-                <StreamIntro leaderboard={leaderboard} leaderboardMaxNum={5} cardSetImages={[]} />
+                <StreamIntro
+                    leaderboard={leaderboard ?? []}
+                    leaderboardMaxNum={5}
+                    schedule={schedule ?? []}
+                    history={history ?? []}
+                />
             </Flex>
         );
     }
@@ -71,7 +74,7 @@ function App() {
                 </Flex>
                 <Flex direction={"column"}>
                     <Heading>LEADERBOARD</Heading>
-                    <Leaderboard leaderboard={leaderboard} />
+                    <Leaderboard leaderboard={leaderboard ?? []} />
                 </Flex>
             </Flex>
         </Flex>

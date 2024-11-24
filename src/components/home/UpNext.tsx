@@ -9,9 +9,13 @@ const googleFormLink =
 
 export const UpNext = React.memo(function UpNext({
     schedule,
+    streamMode,
 }: {
     schedule: MagicSet[] | undefined;
+    streamMode?: boolean;
 }) {
+    const bgColor = streamMode ? undefined : "rgb(0,0,0,0.8)";
+
     // if there are no sets populated, then show a "stay tuned screen"
     if (schedule === undefined) {
         return (
@@ -19,7 +23,7 @@ export const UpNext = React.memo(function UpNext({
                 <Heading>Stay Tuned!</Heading>
                 <Flex
                     maxWidth={500}
-                    backgroundColor={"rgb(0,0,0,0.8)"}
+                    backgroundColor={bgColor}
                     padding={16}
                     borderRadius={20}
                     direction={"column"}
@@ -50,7 +54,7 @@ export const UpNext = React.memo(function UpNext({
                     <Heading>THANKS FOR PLAYING</Heading>
                     <Flex
                         maxWidth={500}
-                        backgroundColor={"rgb(0,0,0,0.8)"}
+                        backgroundColor={bgColor}
                         padding={16}
                         borderRadius={20}
                         direction={"column"}
@@ -72,10 +76,10 @@ export const UpNext = React.memo(function UpNext({
 
     return (
         <Flex flexDirection={"column"} alignItems={"center"}>
-            <Heading>COMING UP NEXT: </Heading>
+            {streamMode ? null : <Heading>COMING UP NEXT: </Heading>}
             <Flex
                 maxWidth={500}
-                backgroundColor={"rgb(0,0,0,0.8)"}
+                backgroundColor={bgColor}
                 padding={16}
                 borderRadius={20}
                 direction={"column"}
@@ -90,7 +94,7 @@ export const UpNext = React.memo(function UpNext({
                 <Heading size={"sm"} color={"white"}>
                     {currentSet?.name}
                 </Heading>
-                <Button onClick={navigateToForm}>PICK YOUR GUESSES</Button>
+                {streamMode ? null : <Button onClick={navigateToForm}>PICK YOUR GUESSES</Button>}
             </Flex>
         </Flex>
     );
