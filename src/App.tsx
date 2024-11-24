@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Flex, Heading, Image } from "@chakra-ui/react";
+import { Flex, Heading, Image } from "@chakra-ui/react";
 
 import "./App.css";
 import { DataService } from "./services/DataService";
@@ -11,14 +11,12 @@ import { HistoryEntry } from "./types/HistoryEntry";
 import { Leaderboard } from "./components/home/Leaderboard";
 import { PreviousResult } from "./components/home/PreviousResult";
 import logo from "./assets/logo.png";
-
-const googleFormLink =
-    "https://docs.google.com/forms/d/e/1FAIpQLSfrE6W0BaAw0wWKa39Y-CgMZEru7XiAm7sE89PMcPrvvn5yyA/viewform";
+import { UpNext } from "./components/home/UpNext";
 
 function App() {
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>();
     const [history, setHistory] = useState<HistoryEntry[]>();
-    const [cardSetImages, setCardSetImages] = useState<MagicSet[]>();
+    const [schedule, setSchedule] = useState<MagicSet[]>();
 
     useEffect(() => {
         const getLeaderboardCallback = (leaderboard: LeaderboardEntry[]) => {
@@ -29,12 +27,12 @@ function App() {
     }, [setLeaderboard]);
 
     useEffect(() => {
-        const getCardSetImagesCallback = (sets: MagicSet[]) => {
-            setCardSetImages(sets);
+        const getCardSetImagesCallback = (schedule: MagicSet[]) => {
+            setSchedule(schedule);
         };
 
         DataService.getSetData(getCardSetImagesCallback);
-    }, [setCardSetImages]);
+    }, [setSchedule]);
 
     useEffect(() => {
         const getHistoryCallback = (history: HistoryEntry[]) => {
@@ -44,7 +42,7 @@ function App() {
         DataService.getHistory(getHistoryCallback);
     }, [setHistory]);
 
-    if (leaderboard === undefined || cardSetImages === undefined) {
+    if (leaderboard === undefined || schedule === undefined) {
         return null;
     }
 
@@ -60,21 +58,6 @@ function App() {
         );
     }
 
-    let dayInDecember = new Date().getDate();
-
-    // if we are past the 24th day, we can just show the first item.
-    if (dayInDecember > 24) {
-        dayInDecember = 0;
-    }
-
-    const imageUri = cardSetImages[dayInDecember].imageUri;
-    const result =
-        history !== undefined && dayInDecember >= 3 ? history[dayInDecember - 1] : undefined;
-
-    const navigateToForm = () => {
-        window.location.href = googleFormLink;
-    };
-
     return (
         <Flex backgroundColor={"rgb(255,255,255,0.8)"} position={"relative"}>
             <Snowfall />
@@ -82,25 +65,9 @@ function App() {
                 <Flex maxWidth={1000}>
                     <Image maxWidth={"100%"} src={logo} />
                 </Flex>
-                <Heading>COMING UP NEXT: </Heading>
-                <Flex
-                    maxWidth={500}
-                    backgroundColor={"rgb(0,0,0,0.8)"}
-                    padding={16}
-                    borderRadius={20}
-                    direction={"column"}
-                >
-                    <Image
-                        maxWidth={"100%"}
-                        src={imageUri}
-                        objectFit={"contain"}
-                        marginBottom={"16px"}
-                    />
-                    <Button onClick={navigateToForm}>PICK YOUR GUESSES</Button>
-                </Flex>
+                <UpNext schedule={schedule} />
                 <Flex direction={"column"}>
-                    {result ? <Heading>YESTERDAY'S RESULTS</Heading> : null}
-                    <PreviousResult result={result} />
+                    <PreviousResult history={history} />
                 </Flex>
                 <Flex direction={"column"}>
                     <Heading>LEADERBOARD</Heading>

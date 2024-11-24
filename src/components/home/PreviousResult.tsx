@@ -5,10 +5,19 @@ import { Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { HistoryEntry } from "../../types/HistoryEntry";
 
 export const PreviousResult = React.memo(function PreviousResult({
-    result,
+    history,
 }: {
-    result: HistoryEntry | undefined;
+    history: HistoryEntry[] | undefined;
 }) {
+    if (history === undefined) {
+        return null;
+    }
+
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+
+    const result = history !== undefined && day >= 3 ? history[day - 1] : undefined;
+
     if (result === undefined) {
         return null;
     }
@@ -34,6 +43,7 @@ export const PreviousResult = React.memo(function PreviousResult({
             justifyContent={"center"}
             borderRadius={"8px"}
         >
+            <Heading>YESTERDAY'S RESULTS</Heading>
             <Flex flexDirection={"row"} flexWrap={"wrap"} gap={"16px"} justifyContent={"center"}>
                 {winningCards}
             </Flex>
