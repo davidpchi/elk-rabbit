@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
-import { Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
+import { Button, Flex, Heading, Image } from "@chakra-ui/react";
 
 import "./App.css";
 import { DataService } from "./services/DataService";
 import { LeaderboardEntry } from "./types/LeaderboardEntry";
 import { StreamIntro } from "./components/tools/StreamIntro";
 import Snowfall from "react-snowfall";
+import { MagicSet } from "./types/MagicSet";
+import { HistoryEntry } from "./types/HistoryEntry";
+import { Leaderboard } from "./components/home/Leaderboard";
+import { PreviousResult } from "./components/home/PreviousResult";
 
 const calendarLogo =
     "https://media.discordapp.net/attachments/787466774412787753/1180377698107932732/2022_advent_calendar_logo_copy.png";
@@ -15,6 +19,7 @@ const googleFormLink =
 
 function App() {
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>();
+    const [history, setHistory] = useState<HistoryEntry[]>();
     const [cardSetImages, setCardSetImages] = useState<string[]>();
 
     useEffect(() => {
@@ -26,27 +31,26 @@ function App() {
     }, [setLeaderboard]);
 
     useEffect(() => {
-        const getCardSetImagesCallback = (images: string[]) => {
-            setCardSetImages(images);
+        const getCardSetImagesCallback = (images: MagicSet[]) => {
+            setCardSetImages(images.map((value) => value.imageUri));
         };
 
-        DataService.getSetImages(getCardSetImagesCallback);
+        DataService.getSetData(getCardSetImagesCallback);
     }, [setCardSetImages]);
 
-    const elements = leaderboard
-        ? leaderboard.map((entry, index) => {
-              return (
-                  <Text fontSize={20} key={index}>
-                      {`${entry.name}: ${entry.score}`}
-                  </Text>
-              );
-          })
-        : null;
+    useEffect(() => {
+        const getHistoryCallback = (history: HistoryEntry[]) => {
+            setHistory(history);
+        };
+
+        DataService.getHistory(getHistoryCallback);
+    }, [setHistory]);
 
     if (leaderboard === undefined || cardSetImages === undefined) {
         return null;
     }
 
+    // /elk-rabbit/elk-rabbit?path=obs_intro
     const queryParameters = new URLSearchParams(window.location.search);
     const path = queryParameters.get("path");
 
@@ -62,8 +66,10 @@ function App() {
         );
     }
 
-    const dayInDecember = new Date().getDate();
+    const dayInDecember = 11; //new Date().getDate();
     const imageUri = cardSetImages[dayInDecember - 1];
+    const result =
+        history !== undefined && dayInDecember >= 3 ? history[dayInDecember - 2] : undefined;
 
     const navigateToForm = () => {
         window.location.href = googleFormLink;
@@ -84,12 +90,21 @@ function App() {
                     borderRadius={20}
                     direction={"column"}
                 >
-                    <Image maxWidth={"100%"} src={imageUri} objectFit={"contain"} />
+                    <Image
+                        maxWidth={"100%"}
+                        src={imageUri}
+                        objectFit={"contain"}
+                        marginBottom={"16px"}
+                    />
                     <Button onClick={navigateToForm}>PICK YOUR GUESSES</Button>
                 </Flex>
                 <Flex direction={"column"}>
+                    {result ? <Heading>YESTERDAY'S RESULTS</Heading> : null}
+                    <PreviousResult result={result} />
+                </Flex>
+                <Flex direction={"column"}>
                     <Heading>LEADERBOARD</Heading>
-                    {elements}
+                    <Leaderboard leaderboard={leaderboard} />
                 </Flex>
             </Flex>
         </Flex>
