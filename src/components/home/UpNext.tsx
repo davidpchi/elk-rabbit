@@ -35,8 +35,8 @@ export const UpNext = React.memo(function UpNext({
     }
 
     const currentDate = new Date();
-    const month = currentDate.getMonth() + 1;
-    const day = currentDate.getDate();
+    const month = 12; // currentDate.getMonth() + 1;
+    const day = 1; // currentDate.getDate();
 
     let currentSet: MagicSet | undefined = undefined;
 
@@ -66,7 +66,12 @@ export const UpNext = React.memo(function UpNext({
                 </Flex>
             );
         } else {
-            currentSet = schedule[day];
+            currentSet = schedule[day - 1];
+
+            // skip to the next day if the current day is already complete
+            if (currentSet.isComplete && day < schedule.length) {
+                currentSet = schedule[day];
+            }
         }
     }
 

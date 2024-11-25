@@ -20,8 +20,6 @@ function App() {
 
     useEffect(() => {
         const getLeaderboardCallback = (leaderboard: LeaderboardEntry[]) => {
-            console.log(leaderboard);
-
             setLeaderboard(leaderboard);
         };
 

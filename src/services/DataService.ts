@@ -31,8 +31,6 @@ const getLeaderboard = async (callback: (result: LeaderboardEntry[]) => void) =>
             });
         }
 
-        console.log(players);
-
         // sort the players from most wins to least
         const sorted = players.sort((a, b) => b.wins - a.wins);
         const results: LeaderboardEntry[] = [];
@@ -64,6 +62,7 @@ const getSetData = async (callback: (result: MagicSet[]) => void) => {
                 name: row.c[0].v,
                 imageUri: row.c[1]?.v ?? "",
                 id: row.c[2].v,
+                isComplete: row.c[5].v ?? false,
             });
         }
 
